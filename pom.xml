@@ -29,9 +29,8 @@
     <java.version>1.7</java.version>
     <deployDirectory>deploy</deployDirectory>
 
-    <salt.version>1.0.0.BUILD-SNAPSHOT</salt.version>
-    <salt.core.version>1.0.0.BUILD-SNAPSHOT</salt.core.version>
-    <salt.resources.version>1.0.0.BUILD-SNAPSHOT</salt.resources.version>
+    <salt.core.version>1.0.0.RELEASE</salt.core.version>
+    <salt.resources.version>1.0.0.RELEASE</salt.resources.version>
 
     <slf4j.version>1.7.25</slf4j.version>
     <junit.version>4.12</junit.version>
@@ -172,11 +171,6 @@
   </dependencies>
 
   <distributionManagement>
-    <repository>
-      <id>bintray-syaku-maven</id>
-      <name>syaku-maven</name>
-      <url>https://api.bintray.com/maven/syaku/maven/fxb-resources/;publish=1</url>
-    </repository>
     <snapshotRepository>
       <uniqueVersion>true</uniqueVersion>
       <id>aintop-snapshots</id>

@@ -11,8 +11,16 @@
   </parent>
 
   <artifactId>salt-core</artifactId>
-  <version>1.0.0.BUILD-SNAPSHOT</version>
+  <version>1.0.0.RELEASE</version>
   <packaging>jar</packaging>
+
+  <distributionManagement>
+    <repository>
+      <id>bintray-syaku-maven</id>
+      <name>syaku-maven</name>
+      <url>https://api.bintray.com/maven/syaku/maven/salt-core/;publish=1</url>
+    </repository>
+  </distributionManagement>
 
   <dependencies>
     <dependency>
