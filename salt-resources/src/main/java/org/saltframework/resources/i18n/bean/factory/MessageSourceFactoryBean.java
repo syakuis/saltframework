@@ -2,8 +2,11 @@ package org.saltframework.resources.i18n.bean.factory;
 
 import java.io.IOException;
 import java.util.Properties;
+
 import org.saltframework.core.io.MessageSourcePathMatchingResource;
 import org.saltframework.core.environment.Env;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.EnvironmentAware;
@@ -17,11 +20,12 @@ import org.springframework.util.StringUtils;
 
 /**
  * @author Seok Kyun. Choi. 최석균 (Syaku)
- * @site http://syaku.tistory.com
  * @since 2017. 9. 2.
  */
 public class MessageSourceFactoryBean implements FactoryBean<MessageSource>,
     EnvironmentAware, InitializingBean {
+  private final Logger logger = LoggerFactory.getLogger(MessageSourceFactoryBean.class);
+
   private final MessageSourcePathMatchingResource messageSourceMatchingPattern =
       new MessageSourcePathMatchingResource();
   private PropertiesPersister propertiesPersister = new DefaultPropertiesPersister();
@@ -55,8 +59,12 @@ public class MessageSourceFactoryBean implements FactoryBean<MessageSource>,
     this.parentMessageSource = parentMessageSource;
   }
 
-  public void setBaseNames(String baseNames) {
-    this.setBaseNames(StringUtils.tokenizeToStringArray(baseNames, ","));
+  /**
+   * 사용할 메세지 프로퍼티 경로를 입력한다. , 를 사용하여 여러개 입력할 수 있다.
+   * @param baseName 문자열 경로
+   */
+  public void setBaseName(String baseName) {
+    this.setBaseNames(StringUtils.tokenizeToStringArray(baseName, ","));
   }
 
   public void setBaseNames(String... baseNames) {
@@ -130,6 +138,12 @@ public class MessageSourceFactoryBean implements FactoryBean<MessageSource>,
 
     String[] baseNames = messageSourceMatchingPattern.getResources(this.baseNames);
 
+    if (logger.isDebugEnabled()) {
+      for (String baseName : baseNames) {
+        logger.debug("MessageSource : {}", baseName);
+      }
+    }
+
     if (baseNames == null) {
       return messageSource;
     }
@@ -152,7 +166,7 @@ public class MessageSourceFactoryBean implements FactoryBean<MessageSource>,
   @Override
   public MessageSource getObject() throws Exception {
     if (this.isSingleton()) {
-      Assert.notNull(this.instance, "The environment must not be null. Run afterPropertiesSet().");
+      Assert.notNull(this.instance, "The environment must not be null. afterPropertiesSet()");
       return this.instance;
     }
 

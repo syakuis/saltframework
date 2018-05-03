@@ -77,7 +77,7 @@ class PropertiesConfiguration {
   @Bean
   public PropertiesFactoryBean stringPathConfig() {
     PropertiesFactoryBean bean = new PropertiesFactoryBean();
-    bean.setLocations(
+    bean.setLocation(
         "classpath:org/saltframework/resources/**/first.properties,"
             + "classpath:org/saltframework/resources/*/second.properties,"
             + "classpath:org/saltframework/resources/properties/app/*/module.properties"

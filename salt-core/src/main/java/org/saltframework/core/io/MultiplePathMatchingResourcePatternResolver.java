@@ -13,9 +13,8 @@ import java.util.List;
 /**
  * PathMatchingResourcePatternResolver 를 이용하여 여러개의 패턴을 처리한다.
  *
- * @date 2015. 10. 1.
  * @author Seok Kyun. Choi. 최석균 (Syaku)
- * @site http://syaku.tistory.com
+ * @since 2015. 10. 1.
  * @see PathMatchingResourcePatternResolver
  */
 public class MultiplePathMatchingResourcePatternResolver implements ResourcePatternResolver {

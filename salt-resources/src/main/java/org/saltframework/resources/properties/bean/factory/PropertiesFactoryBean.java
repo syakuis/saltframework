@@ -17,10 +17,10 @@ import org.springframework.util.StringUtils;
 public class PropertiesFactoryBean extends AbstractPropertiesFactoryBean {
   /**
    * 불러올 대상 경로를 설정한다.
-   * @param locations 문자열로 입력하며 여러개 입력하기 위해 , 구분할 수 있다.
+   * @param location 문자열로 입력하며 여러개 입력하기 위해 , 구분할 수 있다.
    */
-  public void setLocations(String locations) {
-    this.setLocations(StringUtils.tokenizeToStringArray(locations, ","));
+  public void setLocation(String location) {
+    this.setLocations(StringUtils.tokenizeToStringArray(location, ","));
   }
 
   @Override

@@ -67,8 +67,9 @@ public abstract class AbstractPropertiesFactoryBean implements FactoryBean<Prope
 
   /**
    * 설정된 encoding 속성을 얻는 다.
-   * fileEncoding > {@code environment.getProperty("file.encoding")}
-   * > {@code Charset.defaultCharset().name()} > UTF-8
+   * {@code
+   * fileEncoding > environment.getProperty("file.encoding")
+   * > Charset.defaultCharset().name() > UTF-8}
    *
    * @return The String of encoding
    */

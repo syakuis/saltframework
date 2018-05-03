@@ -7,7 +7,6 @@ import org.springframework.beans.factory.config.AbstractFactoryBean;
 
 /**
  * @author Seok Kyun. Choi. 최석균 (Syaku)
- * @site http://syaku.tistory.com
  * @since 2017. 9. 3.
  */
 public class ConfigFactoryBean extends AbstractFactoryBean<Config> {
