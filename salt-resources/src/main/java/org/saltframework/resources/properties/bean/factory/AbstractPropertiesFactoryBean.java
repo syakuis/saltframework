@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+
 import org.saltframework.core.environment.Env;
 import org.saltframework.resources.properties.PropertiesLoader;
 import org.slf4j.Logger;
@@ -11,8 +12,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.EnvironmentAware;
+import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
+import org.springframework.core.env.MutablePropertySources;
+import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * Properties Spring Bean 을 생성하기 위한 추상 클래스이다.
@@ -30,6 +35,7 @@ public abstract class AbstractPropertiesFactoryBean implements FactoryBean<Prope
     EnvironmentAware, InitializingBean {
   private static final Logger logger = LoggerFactory.getLogger(AbstractPropertiesFactoryBean.class);
 
+  private String name;
   private Environment environment;
   private String fileEncoding;
   private String[] locations;
@@ -42,11 +48,27 @@ public abstract class AbstractPropertiesFactoryBean implements FactoryBean<Prope
   }
 
   /**
+   * 이름이 없으면 {@link org.springframework.core.env.PropertySource} 에 등록하지 않는 다.
+   * @param name {@link PropertiesPropertySource#name}
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  /**
    * Properties 에 사용될 encoding 을 설정한다.
    * @param fileEncoding The String of encoding
    */
   public void setFileEncoding(String fileEncoding) {
     this.fileEncoding = fileEncoding;
+  }
+
+  /**
+   * 불러올 대상 경로를 설정한다.
+   * @param location 문자열로 입력하며 여러개 입력하기 위해 , 구분할 수 있다.
+   */
+  public void setLocation(String location) {
+    this.setLocations(StringUtils.tokenizeToStringArray(location, ","));
   }
 
   /**
@@ -161,6 +183,19 @@ public abstract class AbstractPropertiesFactoryBean implements FactoryBean<Prope
           environment.getProperty(Env.FILE_ENCODING_NAMING), fileEncoding);
 
       this.singletonInstance = createObject();
+
+      this.addPropertySources();
+    }
+  }
+
+  private void addPropertySources() {
+    Assert.notNull(environment, "The environment must not be null.");
+    Assert.notNull(singletonInstance, "The singletonInstance must not be null.");
+
+    if (this.name != null) {
+      PropertiesPropertySource source = new PropertiesPropertySource(this.name, this.singletonInstance);
+      MutablePropertySources sources = ((ConfigurableEnvironment) this.environment).getPropertySources();
+      sources.addLast(source);
     }
   }
 

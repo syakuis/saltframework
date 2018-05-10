@@ -1,6 +1,7 @@
 package org.saltframework.resources.properties.bean.factory;
 
 import java.util.Properties;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -45,6 +47,11 @@ public class PropertiesFactoryBeanTest {
   private Properties profileConfig;
 
   @Test
+  public void environment() {
+    System.out.println(environment.getProperty("env.name"));
+  }
+
+  @Test
   public void test() {
     // locations 자료형을 배열과 문자로 했을 때 두 결과가 같은지 판단한다.
     Assert.assertTrue(config.equals(stringPathConfig));
@@ -61,14 +68,15 @@ public class PropertiesFactoryBeanTest {
 
 @Configuration
 class PropertiesConfiguration {
-
   @Bean
   public PropertiesFactoryBean config() {
     PropertiesFactoryBean bean = new PropertiesFactoryBean();
+    bean.setName("config");
     bean.setLocations(
         "classpath:org/saltframework/resources/**/first.properties",
         "classpath:org/saltframework/resources/*/second.properties",
-        "classpath:org/saltframework/resources/properties/app/*/module.properties"
+        "classpath:org/saltframework/resources/properties/app/*/module.properties",
+        "classpath:org/saltframework/resources/properties/env.properties"
     );
 
     return bean;
@@ -80,7 +88,8 @@ class PropertiesConfiguration {
     bean.setLocation(
         "classpath:org/saltframework/resources/**/first.properties,"
             + "classpath:org/saltframework/resources/*/second.properties,"
-            + "classpath:org/saltframework/resources/properties/app/*/module.properties"
+            + "classpath:org/saltframework/resources/properties/app/*/module.properties, "
+            + "classpath:org/saltframework/resources/properties/env.properties"
     );
 
     return bean;
@@ -96,5 +105,14 @@ class PropertiesConfiguration {
     );
 
     return bean;
+  }
+
+  @Bean
+  @Autowired
+  public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer(Properties config) {
+    PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
+    configurer.setProperties(config);
+
+    return configurer;
   }
 }

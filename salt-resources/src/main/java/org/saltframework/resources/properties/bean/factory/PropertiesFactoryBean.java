@@ -2,8 +2,8 @@ package org.saltframework.resources.properties.bean.factory;
 
 import java.io.IOException;
 import java.util.Properties;
+
 import org.saltframework.resources.properties.PropertiesLoader;
-import org.springframework.util.StringUtils;
 
 /**
  * Properties Spring Bean 을 생성하기 위한 클래스이다.
@@ -15,14 +15,6 @@ import org.springframework.util.StringUtils;
  * @see PropertiesLoader
  */
 public class PropertiesFactoryBean extends AbstractPropertiesFactoryBean {
-  /**
-   * 불러올 대상 경로를 설정한다.
-   * @param location 문자열로 입력하며 여러개 입력하기 위해 , 구분할 수 있다.
-   */
-  public void setLocation(String location) {
-    this.setLocations(StringUtils.tokenizeToStringArray(location, ","));
-  }
-
   @Override
   protected Properties createObject() throws IOException {
     PropertiesLoader loader = new PropertiesLoader();
