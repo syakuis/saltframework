@@ -2,15 +2,14 @@ package org.saltframework.resources.properties;
 
 import static org.hamcrest.CoreMatchers.is;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
-import org.saltframework.resources.properties.bean.factory.PropertiesFactoryBean;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.saltframework.resources.properties.bean.factory.PropertiesFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -67,12 +66,6 @@ public class AbstractPropertiesTest {
     Assert.assertEquals(config.getInteger("test.integer"), Integer.decode(env.getProperty("test.integer")));
     Assert.assertEquals(config.getInt("test.integer"), Integer.decode(env.getProperty("test.integer")).intValue());
     Assert.assertEquals(config.getInt("test.integer"), Integer.parseInt(env.getProperty("test.integer")));
-  }
-}
-
-class Config extends AbstractProperties {
-  public Config(Properties properties) {
-    super(properties);
   }
 }
 

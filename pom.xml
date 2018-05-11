@@ -6,7 +6,7 @@
 
   <groupId>org.saltframework</groupId>
   <artifactId>salt</artifactId>
-  <version>1.0.0.BUILD-SNAPSHOT</version>
+  <version>${revision}</version>
   <packaging>pom</packaging>
 
   <url>https://github.com/syakuis/saltframework</url>
@@ -20,20 +20,23 @@
   </developers>
 
   <modules>
-      <module>salt-core</module>
-      <module>salt-resources</module>
+    <module>salt-core</module>
+    <module>salt-resources</module>
+    <module>salt-configuration</module>
   </modules>
 
   <properties>
+    <revision>1.1.0.BUILD-SNAPSHOT</revision>
+
+    <salt.core.version>${revision}</salt.core.version>
+    <salt.resources.version>${revision}</salt.resources.version>
+    <salt.configuration.version>${revision}</salt.configuration.version>
+
     <encoding>UTF-8</encoding>
     <java.version>1.7</java.version>
     <deployDirectory>deploy</deployDirectory>
 
     <java.servlet.version>3.0.1</java.servlet.version>
-
-    <salt.version>1.0.0.BUILD-SNAPSHOT</salt.version>
-    <salt.core.version>1.0.2.RELEASE</salt.core.version>
-    <salt.resources.version>1.0.2.RELEASE</salt.resources.version>
 
     <slf4j.version>1.7.25</slf4j.version>
     <junit.version>4.12</junit.version>
@@ -76,18 +79,18 @@
 
       <dependency>
         <groupId>org.saltframework</groupId>
-        <artifactId>salt</artifactId>
-        <version>${salt.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.saltframework</groupId>
         <artifactId>salt-core</artifactId>
-        <version>${salt.core.version}</version>
+        <version>${revision}</version>
       </dependency>
       <dependency>
         <groupId>org.saltframework</groupId>
         <artifactId>salt-resources</artifactId>
-        <version>${salt.resources.version}</version>
+        <version>${revision}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.saltframework</groupId>
+        <artifactId>salt-configuration</artifactId>
+        <version>${revision}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

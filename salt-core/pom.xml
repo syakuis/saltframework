@@ -7,12 +7,15 @@
   <parent>
     <artifactId>salt</artifactId>
     <groupId>org.saltframework</groupId>
-    <version>1.0.0.BUILD-SNAPSHOT</version>
+    <version>1.1.0.BUILD-SNAPSHOT</version>
   </parent>
 
   <artifactId>salt-core</artifactId>
-  <version>1.0.2.RELEASE</version>
   <packaging>jar</packaging>
+
+  <properties>
+    <main.basedir>${basedir}/../..</main.basedir>
+  </properties>
 
   <distributionManagement>
     <repository>

@@ -35,7 +35,7 @@ public abstract class AbstractPropertiesFactoryBean implements FactoryBean<Prope
     EnvironmentAware, InitializingBean {
   private static final Logger logger = LoggerFactory.getLogger(AbstractPropertiesFactoryBean.class);
 
-  private String name;
+  private String propertySourceName;
   private Environment environment;
   private String fileEncoding;
   private String[] locations;
@@ -48,11 +48,11 @@ public abstract class AbstractPropertiesFactoryBean implements FactoryBean<Prope
   }
 
   /**
-   * 이름이 없으면 {@link org.springframework.core.env.PropertySource} 에 등록하지 않는 다.
-   * @param name {@link PropertiesPropertySource#name}
+   * 프로퍼티를 {@link org.springframework.core.env.PropertySource} 에 등록하여 {@link Environment} 에서 반영한다.
+   * @param propertySourceName {@link PropertiesPropertySource#name}
    */
-  public void setName(String name) {
-    this.name = name;
+  public void setPropertySourceName(String propertySourceName) {
+    this.propertySourceName = propertySourceName;
   }
 
   /**
@@ -192,8 +192,8 @@ public abstract class AbstractPropertiesFactoryBean implements FactoryBean<Prope
     Assert.notNull(environment, "The environment must not be null.");
     Assert.notNull(singletonInstance, "The singletonInstance must not be null.");
 
-    if (this.name != null) {
-      PropertiesPropertySource source = new PropertiesPropertySource(this.name, this.singletonInstance);
+    if (this.propertySourceName != null) {
+      PropertiesPropertySource source = new PropertiesPropertySource(this.propertySourceName, this.singletonInstance);
       MutablePropertySources sources = ((ConfigurableEnvironment) this.environment).getPropertySources();
       sources.addLast(source);
     }

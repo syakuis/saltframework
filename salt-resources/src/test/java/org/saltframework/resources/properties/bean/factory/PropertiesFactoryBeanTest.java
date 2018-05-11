@@ -48,7 +48,7 @@ public class PropertiesFactoryBeanTest {
 
   @Test
   public void environment() {
-    System.out.println(environment.getProperty("env.name"));
+    Assert.assertEquals(environment.getProperty("env.name"), config.getProperty("env.name"));
   }
 
   @Test
@@ -71,7 +71,7 @@ class PropertiesConfiguration {
   @Bean
   public PropertiesFactoryBean config() {
     PropertiesFactoryBean bean = new PropertiesFactoryBean();
-    bean.setName("config");
+    bean.setPropertySourceName("config");
     bean.setLocations(
         "classpath:org/saltframework/resources/**/first.properties",
         "classpath:org/saltframework/resources/*/second.properties",
@@ -108,11 +108,7 @@ class PropertiesConfiguration {
   }
 
   @Bean
-  @Autowired
-  public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer(Properties config) {
-    PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
-    configurer.setProperties(config);
-
-    return configurer;
+  public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+    return new PropertySourcesPlaceholderConfigurer();
   }
 }
