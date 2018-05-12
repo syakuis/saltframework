@@ -5,7 +5,6 @@ import java.util.*;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -15,7 +14,7 @@ import org.springframework.util.StringUtils;
  * @see Properties
  */
 public abstract class AbstractProperties {
-  private final String delimiter = ",";
+  private static final String delimiter = ",";
 
   private final Properties properties;
 
@@ -75,7 +74,8 @@ public abstract class AbstractProperties {
   }
 
   public String getString(String key) {
-    return StringUtils.isEmpty(this.properties.getProperty(key)) ? null : this.properties.getProperty(key);
+    return StringUtils.isEmpty(
+      this.properties.getProperty(key)) ? null : this.properties.getProperty(key);
   }
 
   public String getString(String key, String defaultValue) {
@@ -182,15 +182,15 @@ public abstract class AbstractProperties {
 
   @Override
   public boolean equals(Object target) {
-    if (this.properties == target) {
+    if (this == target) {
       return true;
     }
 
-    if (!(target instanceof Properties)) {
+    if (!(target instanceof AbstractProperties)) {
       return false;
     }
-    Properties object = (Properties) target;
-    return Objects.equals(this.properties, object);
+    AbstractProperties object = (AbstractProperties) target;
+    return Objects.equals(this.properties, object.properties);
   }
 
   @Override
