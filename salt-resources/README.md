@@ -2,6 +2,8 @@
 
 스프링 프로퍼티와 국제화 메세지를 기존 방식에서 개선된 방식을 제공합니다.
 
+Spring properties and internationalization messages provide an improved way to existing methods.
+
 
 ```xml
 <repository>
@@ -20,10 +22,16 @@
 
 ## Properties Loader
 
-- 프로퍼티 경로 속성에 `Ant-Style Pattern` 을 사용할 수 있습니다.
-- 여러 프로퍼티 파일을 한번에 불러올 수 있습니다.
-- 여러 프로퍼티에 같은 속성은 Override 할 수 있습니다.
-- 스프링 서비스 환경에 맞는 프로퍼티 파일을 불러올 수 있습니다.
+- 프로퍼티를 찾기 위한 경로에 `Ant-Style Pattern` 을 사용할 수 있습니다.
+- 여러 프로퍼티 파일을 뭉쳐줍니다.
+- 여러 프로퍼티에 같은 키는 덮어쓰기 할 수 있습니다. (FIFO)
+- 운영 환경에 맞는 `Properties` 를 가져올 수 있습니다.
+- 스프링 통합 환경 변수에 등록할 수 있습니다.
+- You can find the property using the Ant style pattern on the path.
+- Combine multiple property files.
+- Multiple attributes can overwrite the same key. (FIFO)
+- You can get `Properties` for the operating environment.
+- You can register in Spring integrated environment variable.
 
 ### Spring Configuration
 
