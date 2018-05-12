@@ -10,12 +10,11 @@
 	<url>http://jcenter.bintray.com</url>
 </repository>
 
-...
+-----------------------------------------------------------
 
 <dependency>
 	<groupId>org.fxb</groupId>
 	<artifactId>fxb-resources</artifactId>
-	<version>1.0.0.BUILD-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -31,11 +30,36 @@
 ```java
 @Configuration
 @ActiveProfiles("test")
+
+@PropertiesSource("classpath:org/fxb/resources/**/first.properties")
+
+or
+
+@PropertiesSource(
+    configEnable = false,
+    value = "classpath:org/fxb/resources/**/first.properties",
+    beanName = "properties"
+    // addToproertySource = true, // Environment 에 등록한다.
+    // propertySourceName = "properties",
+)
+
+public class PropertiesConfiguration {
+    @Autowired
+    private Config config;
+
+    @Autowired
+    private Properties properties;
+}
+
+-----------------------------------------------------------
+
+@Configuration
+@ActiveProfiles("test")
 public class PropertiesConfiguration {
 
   // Basic
   @Bean
-  public PropertiesFactoryBean propertiesFactoryBean() {
+  public PropertiesFactoryBean properties() {
     PropertiesFactoryBean bean = new PropertiesFactoryBean();
     bean.setLocations(
         "classpath:org/fxb/resources/**/first.properties",
@@ -44,29 +68,40 @@ public class PropertiesConfiguration {
 
     return bean;
   }
+  
+  @Autowired
+  private Properties properties;
 
+  // Config
   @Bean
-  public Properties config() throws IOException {
-    return propertiesFactoryBean().getObject();
-  }
-
-  // Spring profiles
-  @Bean
-  public PropertiesFactoryBean profilePropertiesFactoryBean() {
-    PropertiesFactoryBean bean = new PropertiesFactoryBean();
+  public ConfigPropertiesFactoryBean config() {
+    ConfigPropertiesFactoryBean bean = new ConfigPropertiesFactoryBean();
     bean.setLocations(
         "classpath:org/fxb/resources/**/first.properties",
-        "classpath:org/fxb/resources/*/second.properties",
-        "classpath:org/fxb/resources/properties/first-[profile].properties"
+        "classpath:org/fxb/resources/*/second.properties"
     );
 
     return bean;
   }
+  
+  @Autowired
+  private Config config;
 
+  // Spring profiles
   @Bean
-  public Properties profileConfig() throws IOException {
-    return profilePropertiesFactoryBean().getObject();
+  public PropertiesFactoryBean profile() {
+    PropertiesFactoryBean bean = new PropertiesFactoryBean();
+    bean.setLocations(
+        "classpath:org/fxb/resources/**/first.properties",
+        "classpath:org/fxb/resources/*/second.properties",
+        "classpath:org/fxb/resources/properties/first-{profile}.properties"
+    );
+
+    return bean;
   }
+  
+  @Autowired
+  private Properties profile;
 }
 ```
 
@@ -75,10 +110,13 @@ public class PropertiesConfiguration {
 ```java
 public class PropertiesFactoryBeanTest {
   @Autowired
-  private Properties config;
+  private Properties properties;
+  
+  @Autowired
+  private Config config;
 
   @Autowired
-  @Qualifier("profileConfig")
+  @Qualifier("profile")
   private Properties profileConfig;
 }
 ```

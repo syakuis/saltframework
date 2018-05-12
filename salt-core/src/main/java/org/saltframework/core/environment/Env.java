@@ -1,6 +1,7 @@
 package org.saltframework.core.environment;
 
 import java.nio.charset.Charset;
+
 import org.apache.commons.lang3.StringUtils;
 import org.saltframework.core.util.String2;
 import org.springframework.core.env.Environment;

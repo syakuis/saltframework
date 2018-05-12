@@ -2,6 +2,7 @@ package org.saltframework.configuration;
 
 import java.util.Properties;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.saltframework.resources.properties.Config;
@@ -12,8 +13,8 @@ import org.springframework.boot.bind.PropertySourcesBinder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
+import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -36,19 +37,25 @@ public class PropertiesToObjectTest {
 
   @Test
   public void springBootTest() {
+//    PropertySourcesBinder binder = new PropertySourcesBinder(
+//      ((ConfigurableEnvironment) environment).getPropertySources());
+
+    Properties properties = config.getProperties("user.", false);
+    System.out.println(properties);
+
     PropertySourcesBinder binder = new PropertySourcesBinder(
-      ((ConfigurableEnvironment) environment).getPropertySources());
+      new PropertiesPropertySource("user", properties));
+
+    System.out.println(binder.getPropertySources().get("user").getProperty("name"));
 
     User user = new User();
 
     binder.bindTo("", user);
 
     System.out.println(user);
-  }
 
-  @Test
-  public void beanUtilsTest() {
-    System.out.println(config.getString("username"));
+    Assert.assertEquals(user.getName(), config.getString("user.name"));
+    Assert.assertEquals(user.getUsername(), config.getString("user.username"));
   }
 }
 
@@ -63,7 +70,7 @@ class SpringConfig {
 }
 
 @Configuration
-@PropertiesSource(name = "properties", locations = "classpath:/test.properties")
+@PropertiesSource(beanName = "properties", value = "classpath:/test.properties")
 class SpringConfig2 {
   @Autowired
   private Properties properties;

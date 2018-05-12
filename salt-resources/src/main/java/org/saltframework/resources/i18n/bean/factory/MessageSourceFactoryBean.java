@@ -3,8 +3,8 @@ package org.saltframework.resources.i18n.bean.factory;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.saltframework.core.io.MessageSourcePathMatchingResource;
 import org.saltframework.core.environment.Env;
+import org.saltframework.core.io.MessageSourcePathMatchingResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;

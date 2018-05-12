@@ -14,15 +14,15 @@ import org.saltframework.resources.properties.PropertiesLoader;
  * @see AbstractPropertiesFactoryBean
  * @see PropertiesLoader
  */
-public class PropertiesFactoryBean extends AbstractPropertiesFactoryBean {
+public class PropertiesFactoryBean extends AbstractPropertiesFactoryBean<Properties> {
+
+  @Override
+  public Class<Properties> getObjectType() {
+    return Properties.class;
+  }
+
   @Override
   protected Properties createObject() throws IOException {
-    PropertiesLoader loader = new PropertiesLoader();
-    loader.setLocations(this.getLocations());
-    String fileEncoding = this.getFileEncoding();
-    if (fileEncoding != null) {
-      loader.setFileEncoding(fileEncoding);
-    }
-    return loader.getProperties();
+    return super.loader();
   }
 }

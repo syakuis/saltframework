@@ -3,7 +3,6 @@ package org.saltframework.resources.properties.bean.factory;
 import java.util.Map;
 
 import org.springframework.beans.MutablePropertyValues;
-import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
@@ -13,6 +12,10 @@ import org.springframework.util.Assert;
 /**
  * @author Seok Kyun. Choi. 최석균 (Syaku)
  * @since 2018. 5. 11.
+ *
+ * @see PropertiesSource
+ * @see PropertiesFactoryBean
+ * @see ConfigPropertiesFactoryBean
  */
 public class PropertiesSourceBeanRegistrar implements ImportBeanDefinitionRegistrar {
 
@@ -20,24 +23,31 @@ public class PropertiesSourceBeanRegistrar implements ImportBeanDefinitionRegist
   public void registerBeanDefinitions(AnnotationMetadata annotationMetadata, BeanDefinitionRegistry registry) {
     Map<String, Object> config = annotationMetadata.getAnnotationAttributes(PropertiesSource.class.getName());
 
-    String name = (String) config.get("name");
+    // todo PropertySource 필드명이 변경되면 Map 의 key 명을 변경하지 않으면 컴파일시 오류가 발생될 수 있도록 하기 위한 방법?
+    String beanName = (String) config.get("beanName");
+    boolean configEnable = (boolean) config.get("configEnable");
+    String propertySourceName = (String) config.get("propertySourceName");
+    if ("".equals(propertySourceName)) {
+      propertySourceName = null;
+    }
     String fileEncoding = (String) config.get("fileEncoding");
-    String[] locations = (String[]) config.get("locations");
+    String[] value = (String[]) config.get("value");
 
-    Assert.notEmpty(locations, "읽을 프로퍼티 경로를 하나이상 입력하세요.");
+    Assert.notEmpty(value, "PropertiesSource#value is required.");
 
-    registry.registerBeanDefinition(name, propertiesFactoryBean(locations, fileEncoding));
-  }
-
-  private BeanDefinition propertiesFactoryBean(String[] locations, String fileEncoding) {
     MutablePropertyValues propertyValues = new MutablePropertyValues();
     propertyValues.add("fileEncoding", fileEncoding);
-    propertyValues.add("locations", locations);
+    propertyValues.add("locations", value);
+    propertyValues.add("propertySourceName", propertySourceName);
 
     RootBeanDefinition beanDefinition = new RootBeanDefinition();
-    beanDefinition.setBeanClass(PropertiesFactoryBean.class);
+    if (configEnable) {
+      beanDefinition.setBeanClass(ConfigPropertiesFactoryBean.class);
+    } else {
+      beanDefinition.setBeanClass(PropertiesFactoryBean.class);
+    }
     beanDefinition.setPropertyValues(propertyValues);
 
-    return beanDefinition;
+    registry.registerBeanDefinition(beanName, beanDefinition);
   }
 }

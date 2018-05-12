@@ -1,11 +1,13 @@
 package org.saltframework.resources.properties.bean.factory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
 import org.saltframework.core.environment.Env;
+import org.saltframework.resources.properties.Config;
 import org.saltframework.resources.properties.PropertiesLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,16 +33,17 @@ import org.springframework.util.StringUtils;
  * @see InitializingBean
  * @see PropertiesFactoryBean
  */
-public abstract class AbstractPropertiesFactoryBean implements FactoryBean<Properties>,
+public abstract class AbstractPropertiesFactoryBean<T> implements FactoryBean<T>,
     EnvironmentAware, InitializingBean {
   private static final Logger logger = LoggerFactory.getLogger(AbstractPropertiesFactoryBean.class);
 
   private String propertySourceName;
+  private boolean addToPropertySource;
   private Environment environment;
   private String fileEncoding;
   private String[] locations;
   private boolean singleton = true;
-  private Properties singletonInstance;
+  private T singletonInstance;
 
   @Override
   public void setEnvironment(Environment environment) {
@@ -48,7 +51,16 @@ public abstract class AbstractPropertiesFactoryBean implements FactoryBean<Prope
   }
 
   /**
-   * 프로퍼티를 {@link org.springframework.core.env.PropertySource} 에 등록하여 {@link Environment} 에서 반영한다.
+   * 프로퍼티를 {@link org.springframework.core.env.PropertySources} 에 등록하여 {@link Environment} 에서 반영한다.
+   * @param addToPropertySource 등록여부 설정한다.
+   */
+  public void setAddToPropertySource(boolean addToPropertySource) {
+    this.addToPropertySource = addToPropertySource;
+  }
+
+  /**
+   * 프로퍼티를 {@link org.springframework.core.env.PropertySources} 에 등록할때 사용하는 이름.
+   * {@link org.springframework.core.env.PropertySources#get(String)}
    * @param propertySourceName {@link PropertiesPropertySource#name}
    */
   public void setPropertySourceName(String propertySourceName) {
@@ -142,7 +154,7 @@ public abstract class AbstractPropertiesFactoryBean implements FactoryBean<Prope
   private static String[] getLocationProfileReplace(String[] locations, String profile) {
     List<String> result = new ArrayList<>();
     for (String location : locations) {
-      result.add(location.replace("[profile]", profile));
+      result.add(location.replace("{profile}", profile));
     }
 
     return result.toArray(new String[result.size()]);
@@ -154,16 +166,24 @@ public abstract class AbstractPropertiesFactoryBean implements FactoryBean<Prope
    * @throws Exception PropertiesLoader
    * @see PropertiesLoader
    */
-  protected abstract Properties createObject() throws Exception;
+  protected abstract T createObject() throws Exception;
 
   @Override
-  public Properties getObject() throws Exception {
+  public T getObject() throws Exception {
     if (this.isSingleton()) {
       Assert.notNull(this.singletonInstance, "The instance has not been initialized. Run afterPropertiesSet().");
       return this.singletonInstance;
     } else {
      return createObject();
     }
+  }
+
+  @Override
+  public abstract Class<?> getObjectType();
+
+  @Override
+  public boolean isSingleton() {
+    return this.singleton;
   }
 
   @Override
@@ -188,24 +208,37 @@ public abstract class AbstractPropertiesFactoryBean implements FactoryBean<Prope
     }
   }
 
+  protected Properties loader() throws IOException  {
+    PropertiesLoader loader = new PropertiesLoader();
+    loader.setLocations(this.getLocations());
+    String fileEncoding = this.getFileEncoding();
+    if (fileEncoding != null) {
+      loader.setFileEncoding(fileEncoding);
+    }
+
+    return loader.getProperties();
+  }
+
   private void addPropertySources() {
     Assert.notNull(environment, "The environment must not be null.");
     Assert.notNull(singletonInstance, "The singletonInstance must not be null.");
 
-    if (this.propertySourceName != null) {
-      PropertiesPropertySource source = new PropertiesPropertySource(this.propertySourceName, this.singletonInstance);
+    if (this.addToPropertySource) {
+      Properties properties;
+      if (this.singletonInstance instanceof Properties) {
+        properties = (Properties) this.singletonInstance;
+      } else if (this.singletonInstance instanceof Config) {
+        properties = ((Config) this.singletonInstance).getProperties();
+      } else {
+        throw new IllegalArgumentException(
+          "Object of class [" +
+            singletonInstance.getClass().getName() + "] must be an instance of " +
+            this.singletonInstance.getClass());
+      }
+
+      PropertiesPropertySource source = new PropertiesPropertySource(this.propertySourceName, properties);
       MutablePropertySources sources = ((ConfigurableEnvironment) this.environment).getPropertySources();
       sources.addLast(source);
     }
-  }
-
-  @Override
-  public Class<Properties> getObjectType() {
-    return Properties.class;
-  }
-
-  @Override
-  public boolean isSingleton() {
-    return this.singleton;
   }
 }

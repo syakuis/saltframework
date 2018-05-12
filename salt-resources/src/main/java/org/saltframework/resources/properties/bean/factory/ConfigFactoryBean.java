@@ -2,6 +2,7 @@ package org.saltframework.resources.properties.bean.factory;
 
 
 import java.util.Properties;
+
 import org.saltframework.resources.properties.Config;
 import org.springframework.beans.factory.config.AbstractFactoryBean;
 
