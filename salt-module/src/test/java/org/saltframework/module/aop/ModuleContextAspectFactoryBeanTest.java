@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.saltframework.module.*;
 import org.saltframework.module.ModuleRedefinition.Mode;
 import org.saltframework.module.ModuleRedefinition.Scope;
+import org.saltframework.module.bean.factory.ModuleContextManagerFactoryBean;
 import org.saltframework.module.bean.factory.ModuleRedefinitionAspectFactoryBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -194,10 +194,16 @@ class Database {
 
 @Configuration
 @EnableAspectJAutoProxy
-@Import(TestConfiguration.class)
 class AspectConfiguration {
   @Autowired
   private ModuleContextManager moduleContextManager;
+
+  @Bean
+  public ModuleContextManagerFactoryBean ModuleContextManagerFactoryBean() {
+    ModuleContextManagerFactoryBean bean = new ModuleContextManagerFactoryBean();
+    bean.setBasePackages("org.saltframework.module.test");
+    return bean;
+  }
 
   @Bean
   public Database database() {

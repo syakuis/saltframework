@@ -8,11 +8,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.saltframework.module.bean.factory.ModuleContextManagerFactoryBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 /**
  * @author Seok Kyun. Choi. 최석균 (Syaku)
@@ -20,11 +24,21 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @since 2017. 11. 30.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestConfiguration.class)
+@ContextConfiguration(loader = AnnotationConfigContextLoader.class)
 public class ModuleContextManagerSynchronizedTest {
   private static final Logger logger = LoggerFactory.getLogger(ModuleContextManagerSynchronizedTest.class);
 
   private Blitzer blitzer;
+
+  @Configuration
+  static class ContextConfiguration {
+    @Bean
+    public ModuleContextManagerFactoryBean ModuleContextManagerFactoryBean() {
+      ModuleContextManagerFactoryBean bean = new ModuleContextManagerFactoryBean();
+      bean.setBasePackages("org.saltframework.module.test");
+      return bean;
+    }
+  }
 
   @Autowired
   private ModuleContextManager moduleContextManager;
