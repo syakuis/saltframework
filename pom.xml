@@ -23,6 +23,9 @@
     <module>salt-core</module>
     <module>salt-resources</module>
     <module>salt-configuration</module>
+    <module>salt-module</module>
+    <module>salt-module-data</module>
+    <module>salt-module-data-jpa</module>
   </modules>
 
   <properties>
@@ -31,6 +34,7 @@
     <salt.core.version>${revision}</salt.core.version>
     <salt.resources.version>${revision}</salt.resources.version>
     <salt.configuration.version>${revision}</salt.configuration.version>
+    <salt.module.version>${revision}</salt.module.version>
 
     <encoding>UTF-8</encoding>
     <java.version>1.7</java.version>
@@ -90,6 +94,21 @@
       <dependency>
         <groupId>org.saltframework</groupId>
         <artifactId>salt-configuration</artifactId>
+        <version>${revision}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.saltframework</groupId>
+        <artifactId>salt-module</artifactId>
+        <version>${revision}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.saltframework</groupId>
+        <artifactId>salt-module-data</artifactId>
+        <version>${revision}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.saltframework</groupId>
+        <artifactId>salt-module-data-jpa</artifactId>
         <version>${revision}</version>
       </dependency>
     </dependencies>
@@ -173,9 +192,8 @@
   <distributionManagement>
     <snapshotRepository>
       <uniqueVersion>true</uniqueVersion>
-      <id>aintop-snapshots</id>
-      <name>aintop</name>
-      <url>http://git.aintop.co.kr:8881/repository/secon-maven-snapshot/</url>
+      <id>local-snapshots</id>
+      <url>http://13.125.210.65:8000/repository/maven-snapshots/</url>
     </snapshotRepository>
   </distributionManagement>
 
@@ -186,8 +204,8 @@
     </repository>
 
     <repository>
-      <id>aintop</id>
-      <url>http://git.aintop.co.kr:8881/repository/maven2/</url>
+      <id>local-snapshots</id>
+      <url>http://13.125.210.65:8000/repository/maven-snapshots/</url>
     </repository>
 
     <repository>

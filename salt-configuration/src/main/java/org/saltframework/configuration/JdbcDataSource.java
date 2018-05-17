@@ -1,6 +1,5 @@
 package org.saltframework.configuration;
 
-import java.util.List;
 import java.util.Properties;
 
 import javax.sql.DataSource;
@@ -13,14 +12,12 @@ import org.springframework.boot.bind.PropertySourcesBinder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertiesPropertySource;
-import org.springframework.core.env.PropertySource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
+ * Apache DBCP 2 를 이용하여 {@link DataSource} 빈을 생성한다.
  * @author Seok Kyun. Choi. 최석균 (Syaku)
  * @since 2018. 5. 12.
  */
