@@ -3,10 +3,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
   <groupId>org.saltframework</groupId>
-  <artifactId>salt</artifactId>
-  <version>${revision}</version>
+  <artifactId>salt-parent</artifactId>
+  <version>1.1.0.BUILD-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <url>https://github.com/syakuis/saltframework</url>
@@ -30,11 +29,6 @@
 
   <properties>
     <revision>1.1.0.BUILD-SNAPSHOT</revision>
-
-    <salt.core.version>${revision}</salt.core.version>
-    <salt.resources.version>${revision}</salt.resources.version>
-    <salt.configuration.version>${revision}</salt.configuration.version>
-    <salt.module.version>${revision}</salt.module.version>
 
     <encoding>UTF-8</encoding>
     <java.version>1.7</java.version>
@@ -79,37 +73,6 @@
         <groupId>commons-io</groupId>
         <artifactId>commons-io</artifactId>
         <version>2.5</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.saltframework</groupId>
-        <artifactId>salt-core</artifactId>
-        <version>${revision}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.saltframework</groupId>
-        <artifactId>salt-resources</artifactId>
-        <version>${revision}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.saltframework</groupId>
-        <artifactId>salt-configuration</artifactId>
-        <version>${revision}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.saltframework</groupId>
-        <artifactId>salt-module</artifactId>
-        <version>${revision}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.saltframework</groupId>
-        <artifactId>salt-module-data</artifactId>
-        <version>${revision}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.saltframework</groupId>
-        <artifactId>salt-module-data-jpa</artifactId>
-        <version>${revision}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
