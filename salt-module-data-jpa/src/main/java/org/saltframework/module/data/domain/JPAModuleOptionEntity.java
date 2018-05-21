@@ -3,10 +3,7 @@ package org.saltframework.module.data.domain;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -41,8 +38,15 @@ public class JPAModuleOptionEntity implements ModuleOptionEntity {
   @Column(name = "OPTION_ORDER")
   private int optionOrder;
 
+  @ManyToOne(targetEntity = JPAModuleEntity.class)
+  @JoinColumn(name = "MODULE_ID")
+  private ModuleEntity moduleEntity;
+
+  public JPAModuleOptionEntity() {
+  }
+
   public JPAModuleOptionEntity(String moduleId, String optionName, String optionValue,
-      String optionTitle, int optionOrder) {
+                               String optionTitle, int optionOrder) {
     this.moduleId = moduleId;
     this.optionName = optionName;
     this.optionValue = optionValue;
@@ -50,7 +54,7 @@ public class JPAModuleOptionEntity implements ModuleOptionEntity {
     this.optionOrder = optionOrder;
   }
 
-  public static List<? extends ModuleOptionEntity> createList(JPAModuleOptionEntity... moduleOptions) {
+  public static List<ModuleOptionEntity> createList(JPAModuleOptionEntity... moduleOptions) {
     return Arrays.asList(moduleOptions);
   }
 }

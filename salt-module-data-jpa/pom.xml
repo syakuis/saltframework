@@ -14,6 +14,11 @@
   <dependencies>
     <dependency>
       <groupId>org.saltframework</groupId>
+      <artifactId>salt-configuration</artifactId>
+      <version>${revision}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.saltframework</groupId>
       <artifactId>salt-module-data</artifactId>
       <version>${revision}</version>
     </dependency>

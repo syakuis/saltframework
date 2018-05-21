@@ -19,6 +19,12 @@ public class JPAModuleOptionDAO implements ModuleOptionDAO {
   private EntityManager entityManager;
 
   @Override
+  public List<ModuleOptionEntity> findOne(String moduleId) {
+    return this.entityManager.createQuery("FROM moduleOptionEntity WHERE module_id = :moduleId",
+      ModuleOptionEntity.class).setParameter("moduleId", moduleId).getResultList();
+  }
+
+  @Override
   public void save(ModuleOptionEntity moduleOptionEntity) {
     this.entityManager.persist(moduleOptionEntity);
   }

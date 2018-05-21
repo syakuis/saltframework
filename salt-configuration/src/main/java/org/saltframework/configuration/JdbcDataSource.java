@@ -5,12 +5,10 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.saltframework.configuration.condition.DataSourceBeanExistsIdentifier;
 import org.saltframework.resources.properties.Config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.bind.PropertySourcesBinder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -28,7 +26,6 @@ public class JdbcDataSource {
   private Config config;
 
   @Bean
-  @Conditional(DataSourceBeanExistsIdentifier.class)
   public DataSource dataSource() {
     BasicDataSource dataSource = new BasicDataSource();
 
@@ -42,7 +39,6 @@ public class JdbcDataSource {
   }
 
   @Bean
-  @Conditional(DataSourceBeanExistsIdentifier.class)
   public PlatformTransactionManager transactionManager() {
     return new DataSourceTransactionManager(dataSource());
   }

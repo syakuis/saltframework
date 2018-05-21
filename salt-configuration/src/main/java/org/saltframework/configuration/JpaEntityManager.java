@@ -37,7 +37,7 @@ public class JpaEntityManager {
 
     bean.setPackagesToScan(
         ArrayUtils.add(config.getStringArray("jpa.packageToScan"),
-            config.getString("salt.jpa.packageToScan")));
+            config.getString("default.jpa.packageToScan")));
 
     bean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 

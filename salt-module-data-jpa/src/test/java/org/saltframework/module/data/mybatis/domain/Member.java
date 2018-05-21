@@ -30,7 +30,7 @@ public class Member implements Serializable {
   @Column(name = "REG_DATE")
   private Date registryDate;
 
-  @OneToMany(cascade = CascadeType.ALL, mappedBy = "member")
+  @OneToMany
   private List<User> users;
 
   public Member() {

@@ -39,18 +39,8 @@ public class JPAModuleEntity implements ModuleEntity {
   @Column(name = "REG_DATE")
   private Date registryDate;
 
-  @OneToMany(targetEntity = JPAModuleOptionEntity.class)
-  @JoinColumn(name = "MODULE_ID")
-  private List<? extends ModuleOptionEntity> moduleOptionEntities;
-
-  public void setModuleOptionEntities(
-      List<JPAModuleOptionEntity> moduleOptionEntities) {
-    this.moduleOptionEntities = moduleOptionEntities;
-  }
-
-  public List<? extends ModuleOptionEntity> getModuleOptionEntities() {
-    return moduleOptionEntities;
-  }
+  @OneToMany(mappedBy = "moduleEntity", targetEntity = JPAModuleOptionEntity.class)
+  private List<ModuleOptionEntity> moduleOptionEntities;
 
   public JPAModuleEntity() {
   }
@@ -59,5 +49,14 @@ public class JPAModuleEntity implements ModuleEntity {
     this.moduleId = moduleId;
     this.moduleName = moduleName;
     this.registryDate = new Date();
+  }
+
+  public void setModuleOptionEntities(
+      List<ModuleOptionEntity> moduleOptionEntities) {
+    this.moduleOptionEntities = moduleOptionEntities;
+  }
+
+  public List<ModuleOptionEntity> getModuleOptionEntities() {
+    return moduleOptionEntities;
   }
 }

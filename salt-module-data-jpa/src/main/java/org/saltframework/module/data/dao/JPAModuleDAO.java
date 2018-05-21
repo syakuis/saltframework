@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 @Repository(value = "moduleDAO")
 public class JPAModuleDAO implements ModuleDAO {
 
-  @PersistenceContext(unitName = "entityManagerFactory")
+  @PersistenceContext
   private EntityManager entityManager;
 
 //  private EntityManager entityManager2;

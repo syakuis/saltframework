@@ -30,7 +30,7 @@ public class User implements Serializable {
   @Column(name = "ADDRESS")
   private String address;
 
-  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "USER_ID")
   private Member member;
 

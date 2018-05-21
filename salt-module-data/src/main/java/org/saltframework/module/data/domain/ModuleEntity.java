@@ -13,5 +13,5 @@ public interface ModuleEntity extends Serializable {
   String getModuleName();
   String getBrowserTitle();
   Date getRegistryDate();
-  List<? extends ModuleOptionEntity> getModuleOptionEntities();
+  List<ModuleOptionEntity> getModuleOptionEntities();
 }
