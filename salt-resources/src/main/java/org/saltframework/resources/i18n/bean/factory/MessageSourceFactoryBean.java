@@ -3,8 +3,8 @@ package org.saltframework.resources.i18n.bean.factory;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.saltframework.core.io.MessageSourcePathMatchingResource;
 import org.saltframework.core.environment.Env;
+import org.saltframework.core.io.MessageSourcePathMatchingResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;
@@ -36,15 +36,15 @@ public class MessageSourceFactoryBean implements FactoryBean<MessageSource>,
 
   private MessageSource parentMessageSource;
   private String[] baseNames;
-  int cacheSeconds = -1;
-  boolean concurrentRefresh = true;
-  boolean alwaysUseMessageFormat = false;
+  private int cacheSeconds = -1;
+  private boolean concurrentRefresh = true;
+  private boolean alwaysUseMessageFormat = false;
   private String defaultEncoding;
-  long cacheMillis = -1;
+  private long cacheMillis = -1;
   private Properties fileEncodings;
   private Properties commonMessages;
-  boolean fallbackToSystemLocale = true;
-  boolean useCodeAsDefaultMessage = false;
+  private boolean fallbackToSystemLocale = true;
+  private boolean useCodeAsDefaultMessage = false;
 
   @Override
   public void setEnvironment(Environment environment) {

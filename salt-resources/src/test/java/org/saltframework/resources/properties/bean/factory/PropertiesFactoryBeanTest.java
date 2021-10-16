@@ -5,6 +5,7 @@ import java.util.Properties;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.saltframework.resources.properties.Config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -36,42 +37,53 @@ public class PropertiesFactoryBeanTest {
   private Environment environment;
 
   @Autowired
-  private Properties config;
+  private Properties properties;
 
   @Autowired
-  @Qualifier("stringPathConfig")
-  private Properties stringPathConfig;
+  private Config config;
 
   @Autowired
-  @Qualifier("profileConfig")
-  private Properties profileConfig;
+  @Qualifier("stringPathProperties")
+  private Properties stringPathProperties;
+
+  @Autowired
+  @Qualifier("profileProperties")
+  private Properties profileProperties;
 
   @Test
   public void environment() {
-    Assert.assertEquals(environment.getProperty("env.name"), config.getProperty("env.name"));
+    Assert.assertFalse(properties.isEmpty());
+    Assert.assertEquals(environment.getProperty("env.name"), properties.getProperty("env.name"));
   }
 
   @Test
   public void test() {
-    // locations 자료형을 배열과 문자로 했을 때 두 결과가 같은지 판단한다.
-    Assert.assertTrue(config.equals(stringPathConfig));
-    // Spring PropertySource 과 비교한다.
-    Assert.assertEquals(config.getProperty("name"), environment.getProperty("name"));
-    // profile 사용하여 프로퍼티를 잘 읽어오는 지 판단한다.
-    Assert.assertEquals(profileConfig.getProperty("name"), "test");
-    Assert.assertEquals(profileConfig.getProperty("i18n"), environment.getProperty("i18n"));
+    Assert.assertFalse(properties.isEmpty());
+    Assert.assertFalse(config.isEmpty());
+    Assert.assertFalse(stringPathProperties.isEmpty());
+    Assert.assertFalse(profileProperties.isEmpty());
 
-    Assert.assertTrue(config.containsKey("module.commons.module"));
-    Assert.assertTrue(config.containsKey("module.module.module"));
+    // locations 자료형을 배열과 문자로 했을 때 두 결과가 같은지 판단한다.
+    Assert.assertTrue(properties.equals(stringPathProperties));
+    // Spring PropertySource 과 비교한다.
+    Assert.assertEquals(properties.getProperty("name"), environment.getProperty("name"));
+    Assert.assertEquals(properties.getProperty("name"), config.getString("name"));
+    // profile 사용하여 프로퍼티를 잘 읽어오는 지 판단한다.
+    Assert.assertEquals(profileProperties.getProperty("name"), "test");
+    Assert.assertEquals(profileProperties.getProperty("i18n"), environment.getProperty("i18n"));
+
+    Assert.assertTrue(properties.containsKey("module.commons.module"));
+    Assert.assertTrue(properties.containsKey("module.module.module"));
   }
 }
 
 @Configuration
 class PropertiesConfiguration {
   @Bean
-  public PropertiesFactoryBean config() {
+  public PropertiesFactoryBean properties() {
     PropertiesFactoryBean bean = new PropertiesFactoryBean();
-    bean.setPropertySourceName("config");
+    bean.setPropertySourceName("propertiesEnv");
+    bean.setAddToPropertySource(true);
     bean.setLocations(
         "classpath:org/saltframework/resources/**/first.properties",
         "classpath:org/saltframework/resources/*/second.properties",
@@ -83,7 +95,20 @@ class PropertiesConfiguration {
   }
 
   @Bean
-  public PropertiesFactoryBean stringPathConfig() {
+  public ConfigPropertiesFactoryBean config() {
+    ConfigPropertiesFactoryBean bean = new ConfigPropertiesFactoryBean();
+    bean.setLocations(
+        "classpath:org/saltframework/resources/**/first.properties",
+        "classpath:org/saltframework/resources/*/second.properties",
+        "classpath:org/saltframework/resources/properties/app/*/module.properties",
+        "classpath:org/saltframework/resources/properties/env.properties"
+    );
+
+    return bean;
+  }
+
+  @Bean
+  public PropertiesFactoryBean stringPathProperties() {
     PropertiesFactoryBean bean = new PropertiesFactoryBean();
     bean.setLocation(
         "classpath:org/saltframework/resources/**/first.properties,"
@@ -96,12 +121,12 @@ class PropertiesConfiguration {
   }
 
   @Bean
-  public PropertiesFactoryBean profileConfig() {
+  public PropertiesFactoryBean profileProperties() {
     PropertiesFactoryBean bean = new PropertiesFactoryBean();
     bean.setLocations(
         "classpath:org/saltframework/resources/**/first.properties",
         "classpath:org/saltframework/resources/*/second.properties",
-        "classpath:org/saltframework/resources/properties/first-[profile].properties"
+        "classpath:org/saltframework/resources/properties/first-{profile}.properties"
     );
 
     return bean;

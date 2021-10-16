@@ -1,2 +1,3 @@
-# salt - framework
+# salt-framework
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a649d5eab85749a1a6695a35ad20d0d2)](https://www.codacy.com/app/syaku/saltframework?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=syakuis/saltframework&amp;utm_campaign=Badge_Grade) [![CircleCI Build Status](https://circleci.com/gh/circleci/circleci-docs.svg?style=shield)](https://circleci.com/gh/syakuis/saltframework) [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)]()

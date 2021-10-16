@@ -1,11 +1,7 @@
 package org.saltframework.resources.properties;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Objects;
-import java.util.Properties;
+import java.util.*;
+
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.util.Assert;
@@ -18,7 +14,7 @@ import org.springframework.util.StringUtils;
  * @see Properties
  */
 public abstract class AbstractProperties {
-  private final String delimiter = ",";
+  private static final String delimiter = ",";
 
   private final Properties properties;
 
@@ -27,12 +23,16 @@ public abstract class AbstractProperties {
     this.properties = properties;
   }
 
+  public boolean isEmpty() {
+    return properties.isEmpty();
+  }
+
   public List<String> getKeys() {
     return getKeys(null);
   }
 
   public List<String> getKeys(String prefix) {
-    Enumeration<Object> enumeration = properties.keys();
+    Enumeration<Object> enumeration = this.properties.keys();
     List<String> result = new ArrayList<>();
     while(enumeration.hasMoreElements()) {
       String key = (String) enumeration.nextElement();
@@ -46,7 +46,7 @@ public abstract class AbstractProperties {
   }
 
   public Properties getProperties() {
-    return properties;
+    return this.properties;
   }
 
   public Properties getProperties(String prefix) {
@@ -66,7 +66,7 @@ public abstract class AbstractProperties {
       String name = prefixUse ? key : StringUtils.replace(key, prefix, "");
       properties.setProperty(
           name,
-          getString(key)
+          this.properties.getProperty(key)
       );
     }
 
@@ -74,7 +74,8 @@ public abstract class AbstractProperties {
   }
 
   public String getString(String key) {
-    return StringUtils.isEmpty(properties.getProperty(key)) ? null : properties.getProperty(key);
+    return StringUtils.isEmpty(
+      this.properties.getProperty(key)) ? null : this.properties.getProperty(key);
   }
 
   public String getString(String key, String defaultValue) {
@@ -86,7 +87,7 @@ public abstract class AbstractProperties {
   }
 
   public Long getLonger(String key, Long defaultValue) {
-    Long longer = NumberUtils.createLong(properties.getProperty(key));
+    Long longer = NumberUtils.createLong(this.properties.getProperty(key));
 
     if (longer == null) {
       return defaultValue;
@@ -100,7 +101,7 @@ public abstract class AbstractProperties {
   }
 
   public Integer getInteger(String key, Integer defaultValue) {
-    Integer integer = NumberUtils.createInteger(properties.getProperty(key));
+    Integer integer = NumberUtils.createInteger(this.properties.getProperty(key));
 
     if (integer == null) {
       return defaultValue;
@@ -110,19 +111,19 @@ public abstract class AbstractProperties {
   }
 
   public int getInt(String key) {
-    return NumberUtils.toInt(properties.getProperty(key));
+    return NumberUtils.toInt(this.properties.getProperty(key));
   }
 
   public int getInt(String key, int defaultValue) {
-    return NumberUtils.toInt(properties.getProperty(key), defaultValue);
+    return NumberUtils.toInt(this.properties.getProperty(key), defaultValue);
   }
 
   public long getLong(String key) {
-    return NumberUtils.toLong(properties.getProperty(key));
+    return NumberUtils.toLong(this.properties.getProperty(key));
   }
 
   public long getLong(String key, long defaultValue) {
-    return NumberUtils.toLong(properties.getProperty(key), defaultValue);
+    return NumberUtils.toLong(this.properties.getProperty(key), defaultValue);
   }
 
   public Boolean getBool(String key) {
@@ -130,23 +131,23 @@ public abstract class AbstractProperties {
   }
 
   public Boolean getBool(String key, Boolean defaultValue) {
-    String value = properties.getProperty(key);
+    String value = this.properties.getProperty(key);
     return value  == null && defaultValue != null ? defaultValue : Boolean.valueOf(value);
   }
 
   public boolean getBoolean(String key) {
-    return BooleanUtils.toBoolean(properties.getProperty(key));
+    return BooleanUtils.toBoolean(this.properties.getProperty(key));
   }
 
   public boolean getBoolean(String key, boolean defaultValue) {
-    if (StringUtils.isEmpty(properties.getProperty(key))) {
+    if (StringUtils.isEmpty(this.properties.getProperty(key))) {
       return defaultValue;
     }
-    return BooleanUtils.toBoolean(properties.getProperty(key));
+    return BooleanUtils.toBoolean(this.properties.getProperty(key));
   }
 
   public <T> T get(String key) {
-    return (T) properties.get(key);
+    return (T) this.properties.get(key);
   }
 
   public <T> T getArray(String key) {
@@ -181,24 +182,24 @@ public abstract class AbstractProperties {
 
   @Override
   public boolean equals(Object target) {
-    if (properties == target) {
+    if (this == target) {
       return true;
     }
 
-    if (!(target instanceof Properties)) {
+    if (!(target instanceof AbstractProperties)) {
       return false;
     }
-    Properties object = (Properties) target;
-    return Objects.equals(properties, object);
+    AbstractProperties object = (AbstractProperties) target;
+    return Objects.equals(this.properties, object.properties);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(properties);
+    return Objects.hash(this.properties);
   }
 
   @Override
   public String toString() {
-    return properties.toString();
+    return this.properties.toString();
   }
 }

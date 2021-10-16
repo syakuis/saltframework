@@ -3,6 +3,7 @@ package org.saltframework.resources.properties;
 
 import java.io.IOException;
 import java.util.Properties;
+
 import org.saltframework.core.io.MultiplePathMatchingResourcePatternResolver;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderSupport;

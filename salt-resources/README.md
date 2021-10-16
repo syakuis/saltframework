@@ -2,6 +2,8 @@
 
 스프링 프로퍼티와 국제화 메세지를 기존 방식에서 개선된 방식을 제공합니다.
 
+Spring properties and internationalization messages provide an improved way to existing methods.
+
 
 ```xml
 <repository>
@@ -10,32 +12,62 @@
 	<url>http://jcenter.bintray.com</url>
 </repository>
 
-...
+-----------------------------------------------------------
 
 <dependency>
 	<groupId>org.fxb</groupId>
 	<artifactId>fxb-resources</artifactId>
-	<version>1.0.0.BUILD-SNAPSHOT</version>
 </dependency>
 ```
 
 ## Properties Loader
 
-- 프로퍼티 경로 속성에 `Ant-Style Pattern` 을 사용할 수 있습니다.
-- 여러 프로퍼티 파일을 한번에 불러올 수 있습니다.
-- 여러 프로퍼티에 같은 속성은 Override 할 수 있습니다.
-- 스프링 서비스 환경에 맞는 프로퍼티 파일을 불러올 수 있습니다.
+- 프로퍼티를 찾기 위한 경로에 `Ant-Style Pattern` 을 사용할 수 있습니다.
+- 여러 프로퍼티 파일을 뭉쳐줍니다.
+- 여러 프로퍼티에 같은 키는 덮어쓰기 할 수 있습니다. (FIFO)
+- 운영 환경에 맞는 `Properties` 를 가져올 수 있습니다.
+- 스프링 통합 환경 변수에 등록할 수 있습니다.
+- You can find the property using the Ant style pattern on the path.
+- Combine multiple property files.
+- Multiple attributes can overwrite the same key. (FIFO)
+- You can get `Properties` for the operating environment.
+- You can register in Spring integrated environment variable.
 
 ### Spring Configuration
 
 ```java
 @Configuration
 @ActiveProfiles("test")
+
+@PropertiesSource("classpath:org/fxb/resources/**/first.properties")
+
+or
+
+@PropertiesSource(
+    configEnable = false,
+    value = "classpath:org/fxb/resources/**/first.properties",
+    beanName = "properties"
+    // addToproertySource = true, // Environment 에 등록한다.
+    // propertySourceName = "properties",
+)
+
+public class PropertiesConfiguration {
+    @Autowired
+    private Config config;
+
+    @Autowired
+    private Properties properties;
+}
+
+-----------------------------------------------------------
+
+@Configuration
+@ActiveProfiles("test")
 public class PropertiesConfiguration {
 
   // Basic
   @Bean
-  public PropertiesFactoryBean propertiesFactoryBean() {
+  public PropertiesFactoryBean properties() {
     PropertiesFactoryBean bean = new PropertiesFactoryBean();
     bean.setLocations(
         "classpath:org/fxb/resources/**/first.properties",
@@ -44,29 +76,40 @@ public class PropertiesConfiguration {
 
     return bean;
   }
+  
+  @Autowired
+  private Properties properties;
 
+  // Config
   @Bean
-  public Properties config() throws IOException {
-    return propertiesFactoryBean().getObject();
-  }
-
-  // Spring profiles
-  @Bean
-  public PropertiesFactoryBean profilePropertiesFactoryBean() {
-    PropertiesFactoryBean bean = new PropertiesFactoryBean();
+  public ConfigPropertiesFactoryBean config() {
+    ConfigPropertiesFactoryBean bean = new ConfigPropertiesFactoryBean();
     bean.setLocations(
         "classpath:org/fxb/resources/**/first.properties",
-        "classpath:org/fxb/resources/*/second.properties",
-        "classpath:org/fxb/resources/properties/first-[profile].properties"
+        "classpath:org/fxb/resources/*/second.properties"
     );
 
     return bean;
   }
+  
+  @Autowired
+  private Config config;
 
+  // Spring profiles
   @Bean
-  public Properties profileConfig() throws IOException {
-    return profilePropertiesFactoryBean().getObject();
+  public PropertiesFactoryBean profile() {
+    PropertiesFactoryBean bean = new PropertiesFactoryBean();
+    bean.setLocations(
+        "classpath:org/fxb/resources/**/first.properties",
+        "classpath:org/fxb/resources/*/second.properties",
+        "classpath:org/fxb/resources/properties/first-{profile}.properties"
+    );
+
+    return bean;
   }
+  
+  @Autowired
+  private Properties profile;
 }
 ```
 
@@ -75,10 +118,13 @@ public class PropertiesConfiguration {
 ```java
 public class PropertiesFactoryBeanTest {
   @Autowired
-  private Properties config;
+  private Properties properties;
+  
+  @Autowired
+  private Config config;
 
   @Autowired
-  @Qualifier("profileConfig")
+  @Qualifier("profile")
   private Properties profileConfig;
 }
 ```
